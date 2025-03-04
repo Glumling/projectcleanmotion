@@ -24,3 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* Add this to your existing CSS */
+html {
+  scroll-behavior: smooth;
+}
