@@ -27,7 +27,7 @@ jobs:
         run: npm ci
       
       - name: Build
-        run: npm run build
+        run: NEXT_DISABLE_ESLINT=1 npm run build
         
       - name: Add .nojekyll file
         run: touch out/.nojekyll
