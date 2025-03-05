@@ -3,8 +3,12 @@ const nextConfig = {
   output: 'export',
   images: {
     unoptimized: true,
-    loader: 'custom',
-    loaderFile: './src/image-loader.js',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   basePath: process.env.NODE_ENV === 'production' ? '/projectcleanmotion' : '',
   assetPrefix: process.env.NODE_ENV === 'production' ? '/projectcleanmotion/' : '',

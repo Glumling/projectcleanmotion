@@ -43,9 +43,9 @@ export default function HomePage() {
   
   // Sample logos for the infinite carousel
   const logos = [
-    { logo: "/logos/logo1.png", alt: "Logo 1" },
-    { logo: "/logos/logo2.png", alt: "Logo 2" },
-    { logo: "/logos/logo3.png", alt: "Logo 3" },
+    { logo: "/logos/Logo1.png", alt: "Logo 1" },
+    { logo: "/logos/Logo2.png", alt: "Logo 2" },
+    { logo: "/logos/Logo3.png", alt: "Logo 3" },
   ];
 
   // State to track if the about section is visible
