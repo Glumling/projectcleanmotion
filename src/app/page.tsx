@@ -203,7 +203,7 @@ export default function HomePage() {
             transition={{ duration: 0.7, delay: 0.6 }}
             className="mt-12 w-full"
           >
-            <InfiniteMovingCards items={logos} direction="left" speed="fast" />
+            <InfiniteMovingCards items={logos} direction="left" speed="fast" pauseOnHover />
           </motion.div>
         </div>
       </div>

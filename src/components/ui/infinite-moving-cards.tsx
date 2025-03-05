@@ -1,8 +1,7 @@
 "use client";
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useRef } from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { motion, useAnimationControls } from "motion/react";
 
 export const InfiniteMovingCards = ({
   items,
@@ -23,28 +22,17 @@ export const InfiniteMovingCards = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLUListElement>(null);
   const [start, setStart] = useState(false);
-   const controls = useAnimationControls();
-  // Track animation state
-  const [isPaused, setIsPaused] = useState(false);
-  const animationRef = useRef<number>(0);
-  const startTimeRef = useRef<number>(Date.now());
-
+  
+  // Animation state
+  const [animationStopped, setAnimationStopped] = useState(false);
+  
   useEffect(() => {
-    addAnimation();
-    startAnimation();
-    
-    return () => {
-      // Clean up animation frame on unmount
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
-
-  function addAnimation() {
-    if (containerRef.current && scrollerRef.current) {
+    // Clone items for infinite scroll
+    if (scrollerRef.current) {
       const scrollerContent = Array.from(scrollerRef.current.children);
-      for (let i = 0; i < 3; i++) {
+      
+      // Create multiple duplicates to ensure smooth infinite scrolling
+      for (let i = 0; i < 5; i++) {
         scrollerContent.forEach((item) => {
           const duplicatedItem = item.cloneNode(true);
           if (scrollerRef.current) {
@@ -52,60 +40,66 @@ export const InfiniteMovingCards = ({
           }
         });
       }
+      
+      // Apply CSS variables for animation control
+      if (containerRef.current) {
+        // Set direction
+        containerRef.current.style.setProperty(
+          "--animation-direction",
+          direction === "left" ? "forwards" : "reverse"
+        );
+        
+        // Set speed
+        let durationValue = "40s";
+        if (speed === "fast") durationValue = "20s";
+        else if (speed === "slow") durationValue = "80s";
+        
+        containerRef.current.style.setProperty("--animation-duration", durationValue);
+      }
+      
+      // Start animation
       setStart(true);
     }
-  }
-
-  function startAnimation() {
-    const duration = speed === "fast" ? 20 : speed === "normal" ? 40 : 80;
-    startTimeRef.current = Date.now();
-    
-    controls.start({
-      x: direction === "left" ? [0, -2000] : [-2000, 0],
-      transition: {
-        duration,
-        repeat: Infinity,
-        ease: "linear",
-        repeatType: "loop",
-      }
-    });
-  }
-
+  }, [direction, speed]);
+  
+  // Handle mouse events for pause/resume
   const handleMouseEnter = () => {
-    if (pauseOnHover) {
-      setIsPaused(true);
-      controls.stop();
+    if (pauseOnHover && containerRef.current) {
+      containerRef.current.style.setProperty("--animation-play-state", "paused");
+      setAnimationStopped(true);
     }
   };
-
+  
   const handleMouseLeave = () => {
-    if (pauseOnHover && isPaused) {
-      setIsPaused(false);
-      
-      // Simply restart the animation - this is the most reliable approach
-      // with the current version of framer-motion
-      startAnimation();
+    if (pauseOnHover && containerRef.current) {
+      containerRef.current.style.setProperty("--animation-play-state", "running");
+      setAnimationStopped(false);
     }
   };
-
+  
   return (
     <div
       ref={containerRef}
       className={cn(
-        "relative z-20 max-w-7xl overflow-hidden",
+        "scroller relative z-20 max-w-7xl overflow-hidden",
         className
       )}
       style={{
         maskImage: "linear-gradient(to right, transparent, white 0.5%, white 99.5%, transparent)",
         WebkitMaskImage: "linear-gradient(to right, transparent, white 0.5%, white 99.5%, transparent)",
       }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <motion.ul
+      <ul
         ref={scrollerRef}
-        className="flex min-w-full shrink-0 gap-4 py-4 w-max flex-nowrap"
-        animate={controls}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className={cn(
+          "flex min-w-full shrink-0 gap-4 py-4 w-max flex-nowrap",
+          start && "animate-scroll"
+        )}
+        style={{
+          animationPlayState: animationStopped ? "paused" : "running"
+        }}
       >
         {items.map((item, idx) => (
           <li 
@@ -121,7 +115,7 @@ export const InfiniteMovingCards = ({
             />
           </li>
         ))}
-      </motion.ul>
+      </ul>
     </div>
   );
 };
