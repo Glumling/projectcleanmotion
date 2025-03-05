@@ -43,9 +43,21 @@ export default function HomePage() {
   
   // Sample logos for the infinite carousel
   const logos = [
-    { logo: "/logos/Logo1.png", alt: "Logo 1" },
-    { logo: "/logos/Logo2.png", alt: "Logo 2" },
-    { logo: "/logos/Logo3.png", alt: "Logo 3" },
+    { logo: process.env.NODE_ENV === 'production' 
+        ? '/projectcleanmotion/logos/Logo1.png' 
+        : '/logos/Logo1.png', 
+      alt: "Logo 1" 
+    },
+    { logo: process.env.NODE_ENV === 'production' 
+        ? '/projectcleanmotion/logos/Logo2.png' 
+        : '/logos/Logo2.png', 
+      alt: "Logo 2" 
+    },
+    { logo: process.env.NODE_ENV === 'production' 
+        ? '/projectcleanmotion/logos/Logo3.png' 
+        : '/logos/Logo3.png', 
+      alt: "Logo 3" 
+    },
   ];
 
   // State to track if the about section is visible
