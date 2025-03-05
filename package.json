@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "predeploy": "npm run build && type nul > out/.nojekyll",
+    "predeploy": "npm run build && type nul > out/.nojekyll && copy public\\* out\\",
     "deploy": "gh-pages -d out"
   },
   "dependencies": {

@@ -1,6 +1,6 @@
-export default function myImageLoader({ src, width, quality }) {
+export default function imageLoader({ src, width, quality }) {
   const baseUrl = process.env.NODE_ENV === 'production' 
-    ? 'https://glumling.github.io/projectcleanmotion' 
+    ? '/projectcleanmotion' 
     : '';
   
   // If the src already starts with http or https, return it as is
